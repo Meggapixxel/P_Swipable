@@ -9,7 +9,7 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-UIViewController
+UIViewController usage
 ```swift
 class SwipeableViewController: UIViewController, P_Swipeable {
 
@@ -61,6 +61,64 @@ class SwipeableMasterVC: UIViewController {
 }
 
 navigationController?.pushViewController(SwipeableMasterVC(), animated: true)
+```
+
+UIView  usage
+```swift
+class ConstraintSwipeableView: UIView, P_Swipeable {
+    
+    private lazy var heightConstraint = heightAnchor.constraint(equalToConstant: minSwipeableViewHeight)
+    
+    let swipeDirection: SwipeDirection
+    
+    required init(swipeDirection: SwipeDirection) {
+        self.swipeDirection = swipeDirection
+        super.init(frame: .zero)
+        commonInit()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func commonInit() {
+        heightConstraint.isActive = true
+        prepareSwipeable()
+    }
+    
+    func updateConstraints(to height: CGFloat, animated: Bool) {
+        if animated {
+            heightConstraint.constant = height
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: .curveEaseInOut,
+                animations: { self.swipeableView.superview?.layoutIfNeeded() },
+                completion: nil
+            )
+        } else {
+            heightConstraint.constant = height
+        }
+    }
+    
+}
+
+class SwipeableViewViewController: BaseViewController {
+
+    private let topSwipeableView = ConstraintSwipeableView(swipeDirection: .down)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.addSubview(topSwipeableView)
+        topSwipeableView.translatesAutoresizingMaskIntoConstraints = false
+        topSwipeableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        topSwipeableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        topSwipeableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        topSwipeableView.backgroundColor = .tertiarySystemBackground
+    }
+    
+}
 ```
 
 ## Requirements
