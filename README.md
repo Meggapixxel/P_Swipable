@@ -9,7 +9,64 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+UIViewController
+```swift
+class SwipeableViewController: UIViewController, P_Swipeable {
+
+    private lazy var heightConstraint = view.heightAnchor.constraint(equalToConstant: minSwipeableViewHeight)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        heightConstraint.isActive = true
+        
+        prepareSwipeable() // Step 1
+    }
+    
+    // Step 2
+    var swipeDirection: SwipeDirection { .down }
+    
+    func updateConstraints(to height: CGFloat, animated: Bool) {
+        if animated {
+            heightConstraint.constant = height
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: .curveEaseInOut,
+                animations: { self.swipeableView.superview?.layoutIfNeeded() },
+                completion: nil
+            )
+        } else {
+            heightConstraint.constant = height
+        }
+    }
+    
+}
+
+class SwipeableMasterVC: UIViewController {
+
+    private let swipeableController = SwipeableViewController()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        addChild(swipeableController)
+        view.addSubview(swipeableController.view)
+        swipeableController.didMove(toParent: self)
+        swipeableController.view.translatesAutoresizingMaskIntoConstraints = false
+        swipeableController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        swipeableController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        swipeableController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+    }
+
+}
+
+navigationController?.pushViewController(SwipeableMasterVC(), animated: true)
+```
+
 ## Requirements
+
+- iOS 11.0+
+- Swift 5.0+
 
 ## Installation
 
