@@ -1,0 +1,6 @@
+framework module P_Swipable {
+  umbrella header "P_Swipable-umbrella.h"
+
+  export *
+  module * { export * }
+}

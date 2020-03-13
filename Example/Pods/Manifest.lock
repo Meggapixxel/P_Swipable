@@ -1,0 +1,16 @@
+PODS:
+  - P_Swipable (0.1.0)
+
+DEPENDENCIES:
+  - P_Swipable (from `../`)
+
+EXTERNAL SOURCES:
+  P_Swipable:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  P_Swipable: e461eb024000024b5ed4e77b6c8359b1dbfc2fbe
+
+PODFILE CHECKSUM: b5808a26ec039eba6b1748a9216d16926119655f
+
+COCOAPODS: 1.9.0

@@ -1,0 +1,6 @@
+framework module Pods_P_Swipable_Tests {
+  umbrella header "Pods-P_Swipable_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
