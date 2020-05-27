@@ -31,7 +31,7 @@
 		98A54BB66A11F25887B7F05F /* Pods-P_Swipable_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-P_Swipable_Example.release.xcconfig"; path = "Target Support Files/Pods-P_Swipable_Example/Pods-P_Swipable_Example.release.xcconfig"; sourceTree = "<group>"; };
 		A05D64D83A936F05AFDF973A /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		BC500A07241B92E3008D02FC /* P_Swipable_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "P_Swipable_Example-Bridging-Header.h"; sourceTree = "<group>"; };
-		BC500A08241B92E3008D02FC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../../../../Examples/DraggableView/DraggableView/Controllers/AppDelegate.swift; sourceTree = "<group>"; };
+		BC500A08241B92E3008D02FC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC500A0A241B92F0008D02FC /* SwipableNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipableNavigationController.swift; sourceTree = "<group>"; };
 		BC500A0B241B92F0008D02FC /* SwipableBottomVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipableBottomVC.swift; sourceTree = "<group>"; };
 		BC500A0C241B92F0008D02FC /* SwipableSelectionVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipableSelectionVC.swift; sourceTree = "<group>"; };
@@ -92,10 +92,10 @@
 			children = (
 				BC500A08241B92E3008D02FC /* AppDelegate.swift */,
 				BC500A0F241B92F0008D02FC /* BaseViewController.swift */,
-				BC500A0B241B92F0008D02FC /* SwipableBottomVC.swift */,
-				BC500A0A241B92F0008D02FC /* SwipableNavigationController.swift */,
 				BC500A0C241B92F0008D02FC /* SwipableSelectionVC.swift */,
 				BC500A0D241B92F0008D02FC /* SwipableTopVC.swift */,
+				BC500A0A241B92F0008D02FC /* SwipableNavigationController.swift */,
+				BC500A0B241B92F0008D02FC /* SwipableBottomVC.swift */,
 				BC500A10241B92F0008D02FC /* SwipableViewController.swift */,
 				BC500A0E241B92F0008D02FC /* SwipableViewViewController.swift */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
