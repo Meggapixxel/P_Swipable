@@ -9,7 +9,7 @@
 import UIKit
 import P_Swipable
 
-class SwipeableNavigationController: UINavigationController, P_Swipeable {
+extension SwipeableNavigationController {
     
     static func make() -> SwipeableNavigationController {
         let rootViewController = SwipeableNavigationControllerChild()
@@ -18,7 +18,53 @@ class SwipeableNavigationController: UINavigationController, P_Swipeable {
         return navigationController
     }
     
-    class SwipeableNavigationControllerChild: UIViewController {
+}
+
+final class SwipeableNavigationController: UINavigationController {
+    
+    private lazy var heightConstraint = view.heightAnchor.constraint(equalToConstant: minSwipeableViewHeight)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        heightConstraint.isActive = true
+        prepareSwipeable()
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateConstraints(animated: false)
+    }
+    
+}
+
+// MARK: - P_Swipeable
+extension SwipeableNavigationController: P_Swipeable {
+    
+    var swipeDirection: SwipeDirection { .up }
+    var minSwipeableViewHeight: CGFloat { navigationBar.frame.height + 44 + view.safeAreaInsets.bottom }
+    var endedGestureSwipeableViewHeight: CGFloat { view.bounds.height > maxSwipeableViewHeight - minSwipeableViewHeight ? maxSwipeableViewHeight : minSwipeableViewHeight }
+    
+    func updateConstraints(to height: CGFloat, animated: Bool, _ completion: (() -> ())?) {
+        heightConstraint.constant = height
+        if animated {
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: .curveEaseInOut,
+                animations: { self.swipeableView.superview?.layoutIfNeeded() },
+                completion: nil
+            )
+        } else {
+            swipeableView.superview?.layoutIfNeeded()
+        }
+    }
+    
+}
+
+extension SwipeableNavigationController {
+    
+    final class SwipeableNavigationControllerChild: UIViewController {
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -38,40 +84,6 @@ class SwipeableNavigationController: UINavigationController, P_Swipeable {
             navigationController?.pushViewController(SwipeableNavigationControllerChild(), animated: true)
         }
         
-    }
-    
-    private lazy var heightConstraint = view.heightAnchor.constraint(equalToConstant: minSwipeableViewHeight)
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        heightConstraint.isActive = true
-        prepareSwipeable()
-    }
-    
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        updateConstraints(animated: false)
-    }
-    
-    // MARK: - P_Swipeable
-    var swipeDirection: SwipeDirection { .up }
-    var minSwipeableViewHeight: CGFloat { navigationBar.frame.height + 44 + view.safeAreaInsets.bottom }
-    var endedGestureSwipeableViewHeight: CGFloat { view.bounds.height > maxSwipeableViewHeight - minSwipeableViewHeight ? maxSwipeableViewHeight : minSwipeableViewHeight }
-    
-    func updateConstraints(to height: CGFloat, animated: Bool) {
-        if animated {
-            heightConstraint.constant = height
-            UIView.animate(
-                withDuration: 0.3,
-                delay: 0,
-                options: .curveEaseInOut,
-                animations: { self.swipeableView.superview?.layoutIfNeeded() },
-                completion: nil
-            )
-        } else {
-            heightConstraint.constant = height
-        }
     }
     
 }

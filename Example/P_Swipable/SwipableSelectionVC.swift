@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SwipeableSelectionVC: UITableViewController {
+final class SwipeableSelectionVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,11 +35,11 @@ class SwipeableSelectionVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
         case 1:
-            navigationController?.pushViewController(SwipeableBottomVC(), animated: true)
+            navigationController?.pushViewController(SwipeableBottomVC.make(), animated: true)
         case 2:
-            navigationController?.pushViewController(SwipeableViewViewController(), animated: true)
+            navigationController?.pushViewController(SwipeableViewViewController.make(), animated: true)
         default:
-            navigationController?.pushViewController(SwipeableTopVC(), animated: true)
+            navigationController?.pushViewController(SwipeableTopVC.make(), animated: true)
         }
     }
     

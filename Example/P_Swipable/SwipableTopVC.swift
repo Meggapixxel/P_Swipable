@@ -9,9 +9,17 @@
 import UIKit
 import P_Swipable
 
-class SwipeableTopVC: BaseViewController {
+extension SwipeableTopVC {
+    
+    static func make() -> SwipeableTopVC {
+        return SwipeableTopVC()
+    }
+    
+}
 
-    private let swipeableController = SwipeableViewController()
+final class SwipeableTopVC: BaseViewController {
+
+    private let swipeableController: UIViewController & P_Swipeable = SwipeableViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -9,9 +9,18 @@
 import UIKit
 import P_Swipable
 
-class SwipeableViewController: UIViewController, P_Swipeable {
+extension SwipeableViewController {
+    
+    static func make() -> SwipeableViewController {
+        return SwipeableViewController()
+    }
+    
+}
+
+final class SwipeableViewController: UIViewController {
 
     private lazy var heightConstraint = view.heightAnchor.constraint(equalToConstant: minSwipeableViewHeight)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -36,12 +45,16 @@ class SwipeableViewController: UIViewController, P_Swipeable {
         updateConstraints(animated: false)
     }
     
-    // MARK: - P_Swipeable
+}
+ 
+// MARK: - P_Swipeable
+extension SwipeableViewController: P_Swipeable {
+    
     var swipeDirection: SwipeDirection { .down }
     
-    func updateConstraints(to height: CGFloat, animated: Bool) {
+    func updateConstraints(to height: CGFloat, animated: Bool, _ completion: (() -> ())?) {
+        heightConstraint.constant = height
         if animated {
-            heightConstraint.constant = height
             UIView.animate(
                 withDuration: 0.3,
                 delay: 0,
@@ -50,7 +63,7 @@ class SwipeableViewController: UIViewController, P_Swipeable {
                 completion: nil
             )
         } else {
-            heightConstraint.constant = height
+            swipeableView.superview?.layoutIfNeeded()
         }
     }
     

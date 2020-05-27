@@ -8,7 +8,15 @@
 
 import UIKit
 
-class SwipeableBottomVC: BaseViewController {
+extension SwipeableBottomVC {
+    
+    static func make() -> SwipeableBottomVC {
+        return SwipeableBottomVC()
+    }
+    
+}
+
+final class SwipeableBottomVC: BaseViewController {
 
     private let swipeableController = SwipeableNavigationController.make()
     

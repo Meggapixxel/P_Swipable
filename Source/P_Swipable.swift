@@ -47,36 +47,44 @@ public protocol P_Swipeable {
     /// Called when the `swipeableView` must change its height
     ///
     /// - Parameters:
-    ///   - height: value of height that must be set for `swipeableView`.
-    ///   - animated: is the chage of height must be animated.
-    func updateConstraints(to height: CGFloat, animated: Bool)
+    ///   - height: value of height that must be set for `swipeableView`
+    ///   - animated: is the chage of height must be animated
+    ///   - completion: callback for the end of animation
+    func updateConstraints(to height: CGFloat, animated: Bool, _ completion: (() -> ())?)
+    
+}
+/// Default implementations
+public extension P_Swipeable {
+    
+    var minSwipeableViewHeight: CGFloat { 44 + swipeableView.safeAreaInsets.bottom }
+
+    func updateConstraints(to height: CGFloat, animated: Bool) {
+        updateConstraints(to: height, animated: animated, nil)
+    }
     
 }
 
 public extension P_Swipeable {
-    
-    /// Default implementation of `minSwipeableViewHeight` of `P_Swipeable`.
-    var minSwipeableViewHeight: CGFloat { 44 + swipeableView.safeAreaInsets.bottom }
     
     var isMaximized: Bool { swipeableView.bounds.height == maxSwipeableViewHeight }
     
     var isMinimized: Bool { swipeableView.bounds.height == minSwipeableViewHeight }
     
     /// Change height of `swipeableView` to `minSwipeableViewHeight`
-    func collapse(animated: Bool = true) {
-        updateConstraints(to: minSwipeableViewHeight, animated: animated)
+    func collapse(animated: Bool = true, _ completion: (() -> ())? = nil) {
+        updateConstraints(to: minSwipeableViewHeight, animated: animated, completion)
     }
     
     /// Change height of `swipeableView` to `maxSwipeableViewHeight`
-    func expand(animated: Bool = true) {
-        updateConstraints(to: maxSwipeableViewHeight, animated: animated)
+    func expand(animated: Bool = true, _ completion: (() -> ())? = nil) {
+        updateConstraints(to: maxSwipeableViewHeight, animated: animated, completion)
     }
     
     /// Method to update current height of `swipeableView`
-    func updateConstraints(animated: Bool) {
+    func updateConstraints(animated: Bool, _ completion: (() -> ())? = nil) {
         swipeableView.layoutIfNeeded()
         let newHeight = max(minSwipeableViewHeight, min(maxSwipeableViewHeight, swipeableView.bounds.height))
-        updateConstraints(to: newHeight, animated: animated)
+        updateConstraints(to: newHeight, animated: animated, completion)
     }
     
     /// Default implementation of `endedGestureSwipeableViewHeight` of `P_Swipeable`.
@@ -113,6 +121,7 @@ private extension P_Swipeable {
         let translation = gesture.translation(in: nil)
         
         let translationDelta = translation.y - prevTranslation.y
+//        print(translationDelta)
         let desiredHeight: CGFloat
         switch swipeDirection {
         case .up: desiredHeight = swipeableView.bounds.height - translationDelta
@@ -132,7 +141,7 @@ private extension P_Swipeable {
 }
 
 
-// MARK: - P_Swipeable + UIViewController
+// MARK: - Default implementations for UIViewController
 public extension P_Swipeable where Self: UIViewController {
     
     /// Default implementation of `swipeableView` of `P_Swipeable`. The default value is `view`, means that root view of current
@@ -152,17 +161,8 @@ public extension P_Swipeable where Self: UIViewController {
     }
     
 }
-private extension UIViewController {
-    
-    @objc func swipeablePanGesture(_ gesture: PanGestureRecognizer) {
-        guard let expandable = self as? P_Swipeable else { return }
-        expandable.handlePanGesture(gesture)
-    }
-    
-}
 
-
-// MARK: - P_Swipeable + UIView
+// MARK: - Default implementations for UIView
 public extension P_Swipeable where Self: UIView {
     
     /// Default implementation of `swipeableView` of `P_Swipeable`. The default value is `self`, means that current
@@ -182,7 +182,8 @@ public extension P_Swipeable where Self: UIView {
     }
     
 }
-private extension UIView {
+
+private extension NSObject {
     
     @objc func swipeablePanGesture(_ gesture: PanGestureRecognizer) {
         guard let expandable = self as? P_Swipeable else { return }

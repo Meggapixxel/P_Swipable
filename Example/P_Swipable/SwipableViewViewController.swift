@@ -9,8 +9,53 @@
 import UIKit
 import P_Swipable
 
-class SwipeableViewViewController: BaseViewController {
+extension SwipeableViewViewController {
+    
+    static func make() -> SwipeableViewViewController {
+        return SwipeableViewViewController()
+    }
+    
+}
 
+final class SwipeableViewViewController: BaseViewController {
+
+    private let topSwipeableView = ConstraintSwipeableView(swipeDirection: .down)
+    private let bottomSwipeableView = FrameSwipeableView(swipeDirection: .up)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.addSubview(topSwipeableView)
+        topSwipeableView.translatesAutoresizingMaskIntoConstraints = false
+        topSwipeableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        topSwipeableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        topSwipeableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        topSwipeableView.backgroundColor = .tertiarySystemBackground
+
+        view.addSubview(bottomSwipeableView)
+        bottomSwipeableView.frame = CGRect(
+            x: 0,
+            y: view.bounds.height - bottomSwipeableView.minSwipeableViewHeight - view.safeAreaInsets.bottom - view.safeAreaInsets.top,
+            width: view.bounds.width,
+            height: bottomSwipeableView.minSwipeableViewHeight
+        )
+        bottomSwipeableView.backgroundColor = .tertiarySystemBackground
+    }
+    
+    @objc override func collapseBottomController() {
+        topSwipeableView.collapse()
+        bottomSwipeableView.collapse()
+    }
+    
+    @objc override func expandBottomController() {
+        topSwipeableView.expand()
+        bottomSwipeableView.expand()
+    }
+
+}
+
+extension SwipeableViewViewController {
+    
     class ConstraintSwipeableView: UIView, P_Swipeable {
         
         private lazy var heightConstraint = heightAnchor.constraint(equalToConstant: minSwipeableViewHeight)
@@ -47,22 +92,23 @@ class SwipeableViewViewController: BaseViewController {
             updateConstraints(animated: false)
         }
         
-        func updateConstraints(to height: CGFloat, animated: Bool) {
-            if animated {
-                heightConstraint.constant = height
-                UIView.animate(
-                    withDuration: 0.3,
-                    delay: 0,
-                    options: .curveEaseInOut,
-                    animations: { self.swipeableView.superview?.layoutIfNeeded() },
-                    completion: nil
-                )
-            } else {
-                heightConstraint.constant = height
-            }
+        func updateConstraints(to height: CGFloat, animated: Bool, _ completion: (() -> ())?) {
+            heightConstraint.constant = height
+            guard animated else { return }
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: .curveEaseInOut,
+                animations: { self.swipeableView.superview?.layoutIfNeeded() },
+                completion: { _ in completion?() }
+            )
         }
         
     }
+    
+}
+
+extension SwipeableViewViewController {
     
     class FrameSwipeableView: UIView, P_Swipeable {
         
@@ -97,7 +143,7 @@ class SwipeableViewViewController: BaseViewController {
             updateConstraints(animated: false)
         }
         
-        func updateConstraints(to height: CGFloat, animated: Bool) {
+        func updateConstraints(to height: CGFloat, animated: Bool, _ completion: (() -> ())?) {
             let deltaY = height - bounds.height
             let newFrame = CGRect(
                 x: frame.origin.x,
@@ -120,38 +166,4 @@ class SwipeableViewViewController: BaseViewController {
         
     }
     
-    private let topSwipeableView = ConstraintSwipeableView(swipeDirection: .down)
-    private let bottomSwipeableView = FrameSwipeableView(swipeDirection: .up)
-    
-    override func viewDidLoad() {
-        
-        view.addSubview(topSwipeableView)
-        topSwipeableView.translatesAutoresizingMaskIntoConstraints = false
-        topSwipeableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        topSwipeableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        topSwipeableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        topSwipeableView.backgroundColor = .tertiarySystemBackground
-
-        view.addSubview(bottomSwipeableView)
-        bottomSwipeableView.frame = CGRect(
-            x: 0,
-            y: view.bounds.height - bottomSwipeableView.minSwipeableViewHeight - view.safeAreaInsets.bottom - view.safeAreaInsets.top,
-            width: view.bounds.width,
-            height: bottomSwipeableView.minSwipeableViewHeight
-        )
-        bottomSwipeableView.backgroundColor = .tertiarySystemBackground
-        
-        super.viewDidLoad()
-    }
-    
-    @objc override func collapseBottomController() {
-        topSwipeableView.collapse()
-        bottomSwipeableView.collapse()
-    }
-    
-    @objc override func expandBottomController() {
-        topSwipeableView.expand()
-        bottomSwipeableView.expand()
-    }
-
 }
